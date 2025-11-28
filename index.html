@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Valorant Kutusu</title>
+<style>
+    body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: radial-gradient(circle at center, #0f0f1a, #1a1a2e);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        overflow: hidden;
+        color: #fff;
+    }
+
+    h1 {
+        font-size: 28px;
+        margin-bottom: 30px;
+        color: #ff5050;
+        text-shadow: 0 0 10px rgba(255, 80, 80, 0.8);
+        animation: pulse 1.5s infinite;
+        transition: opacity 1s;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.05); opacity: 0.8; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    .box-image {
+        width: 320px;
+        border-radius: 12px;
+        box-shadow: 0 0 35px rgba(255, 80, 80, 0.9),
+                    0 0 15px rgba(255, 200, 80, 0.6);
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+        cursor: pointer;
+        position: relative;
+        z-index: 10;
+    }
+
+    .box-image:hover {
+        transform: scale(1.08);
+        box-shadow: 0 0 45px rgba(255, 120, 120, 1),
+                    0 0 25px rgba(255, 220, 120, 0.8);
+    }
+
+    .confetti {
+        position: fixed;
+        width: 8px;
+        height: 8px;
+        top: 0;
+        animation: fall 5s linear forwards;
+        z-index: 1000;
+        border-radius: 50%;
+    }
+
+    @keyframes fall {
+        0% { transform: translateY(0) rotate(0deg); }
+        100% { transform: translateY(100vh) rotate(360deg); }
+    }
+
+    .popup {
+        opacity: 0;
+        display: none;
+        position: absolute;
+        top: 360px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 15px;
+        background-color: #ffffffcc;
+        border: 2px solid #333;
+        box-shadow: 2px 2px 12px rgba(0,0,0,0.2);
+        border-radius: 10px;
+        font-weight: bold;
+        z-index: 1000;
+        transition: opacity 0.4s;
+        color: #111;
+        text-align: center;
+    }
+
+    .popup.show {
+        display: block;
+        opacity: 1;
+    }
+
+    .options {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        gap: 40px;
+    }
+
+    .option {
+        background: #ffcc00;
+        color: #111;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: transform 0.4s ease;
+    }
+
+    .option:hover {
+        background: #ffaa00;
+    }
+
+    .zoom {
+        transform: scale(2);
+        z-index: 2000;
+        background: #fff;
+        color: #000;
+    }
+
+    .ready-text {
+        position: fixed;
+        top: 20%;
+        left: -100%;
+        font-size: 64px;
+        font-weight: bold;
+        color: #ffcc00;
+        text-shadow: 0 0 20px #ffcc00;
+        white-space: nowrap;
+        animation: filmstrip 7s linear forwards;
+        z-index: 2000;
+    }
+
+    @keyframes filmstrip {
+        0%   { left: -100%; opacity: 1; }
+        50%  { left: 50%; transform: translateX(-50%); opacity: 1; }
+        100% { left: 120%; opacity: 1; }
+    }
+</style>
+</head>
+<body>
+
+<h1 id="title">Çılgınca ismi görmek için aç!</h1>
+
+<div class="ready-text">HAZIR MISIN?</div>
+
+<!-- Ta-daaa sesi -->
+<audio id="tadaaSound" src="tadaa.mp3"></audio>
+
+<img id="closedBox" src="Adobe Express - file.png" alt="Kapalı Valorant Kutusu" class="box-image">
+<img id="openBox" src="acik kayisi isim gelen.png" alt="Açık Valorant Kutusu" class="box-image" style="display:none;">
+
+<div id="popupMessage" class="popup">
+    <div>Birini seç!</div>
+    <div class="options">
+        <div class="option" id="opt1">Börülce</div>
+        <div class="option" id="opt2">Tuzluk</div>
+    </div>
+</div>
+
+<script>
+const closed = document.getElementById("closedBox");
+const open = document.getElementById("openBox");
+const tadaa = document.getElementById("tadaaSound");
+const popup = document.getElementById("popupMessage");
+const title = document.getElementById("title");
+
+closed.addEventListener("click", () => {
+    closed.style.display = "none";
+    open.style.display = "block";
+
+    // Ta-daaa sesi çal
+    tadaa.currentTime = 0;
+    tadaa.play();
+
+    popup.classList.add("show");
+
+    title.style.opacity = "0";
+    title.style.display = "none";
+});
+
+function dropConfetti() {
+    for (let i = 0; i < 120; i++) {
+        const c = document.createElement("div");
+        c.classList.add("confetti");
+        c.style.left = Math.random() * window.innerWidth + "px";
+        c.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 75%)`;
+        c.style.animationDelay = Math.random() * 1 + "s";
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 3000);
+    }
+}
+
+// Zoom + konfeti
+document.getElementById("opt1").addEventListener("click", () => {
+    document.getElementById("opt1").classList.add("zoom");
+    document.getElementById("opt2").style.display = "none";
+    dropConfetti();
+});
+document.getElementById("opt2").addEventListener("click", () => {
+    document.getElementById("opt2").classList.add("zoom");
+    document.getElementById("opt1").style.display = "none";
+    dropConfetti();
+});
+</script>
+
+</body>
+</html>
